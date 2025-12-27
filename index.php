@@ -217,6 +217,54 @@ $names = [
 	'Samatha',
 ];
 
+function loripsum(
+    int $paragraphs = 1,
+    string $length = 'medium',
+    bool $plaintext = false
+) {
+    $sentences = [
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+        "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+        "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+        "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+        "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        "Curabitur pretium tincidunt lacus. Nulla gravida orci a odio.",
+        "Nullam varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis sollicitudin mauris.",
+        "Integer in mauris eu nibh euismod gravida.",
+        "Morbi auctor lorem non justo semper feugiat.",
+        "Suspendisse potenti. In hac habitasse platea dictumst."
+    ];
+
+    switch ($length) {
+        case 'short':
+            $sentencesPerParagraph = [1,2];
+            break;
+        case 'long':
+            $sentencesPerParagraph = [6,10];
+            break;
+        default:
+            $sentencesPerParagraph = [3,5];
+    }
+
+    $output = [];
+    for ($i = 0; $i < $paragraphs; $i++) {
+        $count = rand($sentencesPerParagraph[0], $sentencesPerParagraph[1]);
+        $para = [];
+        for ($j = 0; $j < $count; $j++) {
+            $para[] = $sentences[array_rand($sentences)];
+        }
+
+        $paragraph = implode(" ", $para);
+        if ($plaintext) {
+            $output[] = $paragraph;
+        } else {
+            $output[] = "<p>$paragraph</p>";
+        }
+    }
+
+    return implode($plaintext ? "\n\n" : "\n", $output);
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -253,7 +301,7 @@ $names = [
 							<input class="form-input" type="text" id="name" name="name" value="<?php echo $names[rand(0, count($names) -1)]; ?>" placeholder="Your Name" readonly required>
 						</div>
 						<div class="form-group">
-							<textarea type="text" id="message" name="message" placeholder="Your Greetings Message" readonly required><?php echo trim(htmlspecialchars_decode(file_get_contents("https://loripsum.net/api/1/short/plaintext"))); ?></textarea>
+							<textarea type="text" id="message" name="message" placeholder="Your Greetings Message" readonly required><?php echo trim(htmlspecialchars_decode(loripsum(1, "short", true))); ?></textarea>
 						</div>
 						<div class="form-info">
 							<span>* Required</span>
